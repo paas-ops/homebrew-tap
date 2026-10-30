@@ -5,21 +5,21 @@
 class KubectlTriage < Formula
   desc "Offline-first Kubernetes incident triage CLI"
   homepage "https://github.com/paas-ops/kubectl-triage"
-  version "0.4.0"
+  version "0.5.0"
   license "Apache-2.0"
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/paas-ops/kubectl-triage/releases/download/v0.4.0/kubectl-triage_0.4.0_darwin_amd64.tar.gz"
-      sha256 "026edc97ee7a7104e4c8ea3002678eaaeb38e0dcdfa16a13567f58eab752acc3"
+      url "https://github.com/paas-ops/kubectl-triage/releases/download/v0.5.0/kubectl-triage_0.5.0_darwin_amd64.tar.gz"
+      sha256 "e56edc80529efa26d7e1fe81c9bf50dcfaa757c2a4ddf7d841fb0f0f5d70dd0e"
 
       define_method(:install) do
         bin.install "kubectl-triage"
       end
     end
     if Hardware::CPU.arm?
-      url "https://github.com/paas-ops/kubectl-triage/releases/download/v0.4.0/kubectl-triage_0.4.0_darwin_arm64.tar.gz"
-      sha256 "acc21ad40b1bdb7dc20bdfe779ee4e28e34cd96d329174f5ee308472b2a735c5"
+      url "https://github.com/paas-ops/kubectl-triage/releases/download/v0.5.0/kubectl-triage_0.5.0_darwin_arm64.tar.gz"
+      sha256 "bb9b471cdfd3ea81c91a67323a130723ad0784b13292e933b0922ac5b822fe50"
 
       define_method(:install) do
         bin.install "kubectl-triage"
@@ -29,15 +29,15 @@ class KubectlTriage < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url "https://github.com/paas-ops/kubectl-triage/releases/download/v0.4.0/kubectl-triage_0.4.0_linux_amd64.tar.gz"
-      sha256 "ab6aac0e27a2622c18a8d64f4bd9a1ef345165fc4858342eaa862e29d7623b4e"
+      url "https://github.com/paas-ops/kubectl-triage/releases/download/v0.5.0/kubectl-triage_0.5.0_linux_amd64.tar.gz"
+      sha256 "dda2e52ec1f4cd739be69cd6762ad06b81e487a1cbb7eb86d0939e65bfac0461"
       define_method(:install) do
         bin.install "kubectl-triage"
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url "https://github.com/paas-ops/kubectl-triage/releases/download/v0.4.0/kubectl-triage_0.4.0_linux_arm64.tar.gz"
-      sha256 "3ac0994589132e7b0d9bd9d31b4205acd526cefc922875889a43d5f681134ba5"
+      url "https://github.com/paas-ops/kubectl-triage/releases/download/v0.5.0/kubectl-triage_0.5.0_linux_arm64.tar.gz"
+      sha256 "0e2ad08dd1081b08f7d04eb8b68cd04bc8f2f2b72f5fdf1c42ae692595238d97"
       define_method(:install) do
         bin.install "kubectl-triage"
       end
