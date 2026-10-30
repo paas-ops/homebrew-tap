@@ -1,0 +1,62 @@
+name: sync-formula
+
+# Keeps Formula/kubectl-triage.rb in sync with the latest release of
+# paas-ops/kubectl-triage. Uses the tap repository own GITHUB_TOKEN, so no
+# cross-repository PAT is required. Can also be dispatched manually for a tag.
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "kubectl-triage release tag (default: latest release)"
+        required: false
+
+concurrency:
+  group: sync-formula
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve tag and fetch formula
+        id: fetch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          set -euo pipefail
+          tag="$INPUT_TAG"
+          if [ -z "$tag" ]; then
+            tag=$(gh api repos/paas-ops/kubectl-triage/releases/latest --jq .tag_name)
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          gh release download "$tag" -R paas-ops/kubectl-triage -p kubectl-triage.rb -O /tmp/kubectl-triage.rb
+          mkdir -p Formula
+          cp /tmp/kubectl-triage.rb Formula/kubectl-triage.rb
+          if git diff --quiet -- Formula/kubectl-triage.rb; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "formula already up to date for $tag"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "formula updated for $tag"
+          fi
+
+      - name: Commit formula
+        if: steps.fetch.outputs.changed == 'true'
+        env:
+          TAG: ${{ steps.fetch.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Formula/kubectl-triage.rb
+          git commit -m "kubectl-triage ${TAG#v}"
+          git push
+
